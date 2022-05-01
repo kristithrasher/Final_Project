@@ -1,0 +1,40 @@
+-- Create lookup tables
+-- Races
+CREATE TABLE "goals" (
+    "race_id" int   NOT NULL,
+    "racedescription" char(200)   NOT NULL
+     );
+
+insert into races(race_id, racedescription) values(1,'Black/African American');
+insert into races(race_id, racedescription) values(2,'European/Caucasian-American');
+insert into races(race_id, racedescription) values(3,'Latino/Hispanic American');
+insert into races(race_id, racedescription) values(4,'Asian/Pacific Islander/Asian-American');
+insert into races(race_id, racedescription) values(5,'Native American');
+insert into races(race_id, racedescription) values(6,'Other')
+
+-- Goals
+CREATE TABLE "goals" (
+    "goal_id" int   NOT NULL,
+    "goaldescription" char(200)   NOT NULL
+     );
+	 
+insert into goals(goal_id, goaldescription) values(1,'Seemed like a fun night out');
+insert into goals(goal_id, goaldescription) values(2,'To meet new people');
+insert into goals(goal_id, goaldescription) values(3,'To get a date');
+insert into goals(goal_id, goaldescription) values(4,'Looking for a serious relationship');
+insert into goals(goal_id, goaldescription) values(5,'To say I did it');
+insert into goals(goal_id, goaldescription) values(6,'Other')
+
+-- Frequencies
+CREATE TABLE "frequencies" (
+    "freq_id" int   NOT NULL,
+    "freqdescription" char(200)   NOT NULL
+     );
+	 
+insert into frequencies(freq_id, freqdescription) values(1,'Several times a week');
+insert into frequencies(freq_id, freqdescription) values(2,'Twice a week');
+insert into frequencies(freq_id, freqdescription) values(3,'Once a week');
+insert into frequencies(freq_id, freqdescription) values(4,'Twice a month');
+insert into frequencies(freq_id, freqdescription) values(5,'Once a month');
+insert into frequencies(freq_id, freqdescription) values(6,'Several times a year');
+insert into frequencies(freq_id, freqdescription) values(7,'Almost never')

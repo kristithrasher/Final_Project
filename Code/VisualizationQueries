@@ -1,0 +1,162 @@
+select * from person where person_id = 1;
+select * from sd_wave_pair where wave_id = 1
+-- Defina Person Schema
+select 
+	case 
+		when p.gender = 1 then 'Male'
+		when p.gender = 0 then 'Female'
+	end as Gender,
+	min(p.age) as MinAge,
+	avg(p.age) as AvgAge,
+	max(p.age) as MaxAge
+from person p
+group by gender;
+
+-- Age bins
+/*
+[<21]
+[21 - 25]
+[26 - 30]
+[31 - 35]
+[36 - 40]
+[41 - 45]
+[46 - 50]
+[51 - 55]
+*/
+
+select 
+	p.person_id,
+	case 
+		when p.gender = 1 then 'Male'
+		when p.gender = 0 then 'Female'
+	end as Gender, 
+	p.age,
+	case
+		when age < 21 then '< 21'
+		when age >= 21 and age <=25 then '21 - 25'
+		when age > 25 and age <=30 then '26 - 30'
+		when age > 30 and age <=35 then '31 - 35'
+		when age > 35 and age <=40 then '36 - 40'
+		when age > 40 and age <=45 then '41 - 45'
+		when age > 45 and age <=50 then '46 - 50'
+		when age > 51 and age <=55 then '51 - 55'
+	end as AgeBin,
+	trim(r.racedescription) as Race,	
+	trim(f.field_desc) as IntendedCareer,
+	trim(g.goaldescription) as goal,
+	trim(f1.freqdescription) as datefrequency,
+	trim(f2.freqdescription) as gooutfrequency,
+	p.importance_race as raceimportance,
+	p.importance_religion as religionimportance,
+	p.interest_sports,
+	p.interest_exercise,
+	p.interest_dining,
+	p.interest_museums,
+	p.interest_art,
+	p.interest_hiking,
+	p.interest_gaming,
+	p.interest_clubbing,
+	p.interest_reading,
+	p.interest_tv,
+	p.interest_theater,
+	p.interest_movies,
+	p.interest_concerts,
+	p.interest_music,
+	p.interest_shopping,
+	p.interest_yoga,
+	trim(p.origin2) as ComingFrom,
+	trim(p.city) as city,
+	case
+		when p.state is null then ''
+		else trim(p.state)
+	end as state,
+	trim(p.country) as country,
+	trim(p.countrycode) as countrycode	
+from person p
+left outer join races r on(r.race_id = p.race)
+left outer join field f on(f.field_id = p.field_id)
+left outer join goals g on(g.goal_id = p.goal)
+left outer join frequencies f1 on(f1.freq_id = p.freq_date)
+left outer join frequencies f2 on(f2.freq_id = p.freq_go_out);
+
+-- Expectations
+select * from person
+select * from survey_question
+select * from preference_perception
+select * from sd_wave order by wave_date asc
+select * from sd_wave_pair where match = 1
+
+select sdp.person_id,
+	w.wave_id,
+	max(w.wave_date) as "Wave Date",
+	avg(sdp.score_attractive) as atractive,
+	avg(sdp.score_sincere) as sincere,
+	avg(sdp.score_intelligent) as intelligence,
+	avg(sdp.score_fun) as fun,
+	avg(sdp.score_ambitious) as ambitious,
+	avg(sdp.score_shared_interests) as "shared interests",
+	(select count(wave_id) from sd_wave_pair where ((person_id = sdp.person_id) or (partner_id = sdp.person_id)) and (wave_id = w.wave_id)) as "Total Waves",
+	(select count(person_id) from sd_wave_pair where (match = 1) and ((person_id = sdp.person_id) or (partner_id = sdp.person_id)) and (wave_id = w.wave_id)) as "Total Matches"
+from sd_wave_pair sdp
+left outer join sd_wave w on(w.wave_id = sdp.wave_id)
+group by sdp.person_id, w.wave_id
+order by sdp.person_id
+
+select * from sd_wave_pair
+
+-- select * from sd_wave_pair order by wave_date asc
+select max(w.wave_date) as "Wave Date", count(wp.wave_id) as total 
+from sd_wave_pair wp 
+left outer join sd_wave w on(w.wave_id = wp.wave_id)
+group by wp.wave_id order by wp.wave_id
+
+select w.wave_id as wave_id,
+	wave_date as "Wave Date",
+	(select count(*) from sd_wave_pair where wave_id = w.wave_id) as "Total Dates",
+	(select count(*) from sd_wave_pair where wave_id = w.wave_id and match = 1) as "Total Matches"
+from sd_wave w
+order by w.wave_id
+
+select sdp.person_id,
+	--w.wave_id,
+	--max(w.wave_date) as "Wave Date",
+	avg(sdp.score_attractive) as atractive,
+	avg(sdp.score_sincere) as sincere,
+	avg(sdp.score_intelligent) as intelligence,
+	avg(sdp.score_fun) as fun,
+	avg(sdp.score_ambitious) as ambitious,
+	avg(sdp.score_shared_interests) as "shared interests",
+	(select count(wave_id) from sd_wave_pair where ((person_id = sdp.person_id) )) as "Total Waves", --or (partner_id = sdp.person_id)
+	(select count(person_id) from sd_wave_pair where (match = 1) and ((person_id = sdp.person_id) )) as "Total Matches" --or (partner_id = sdp.person_id)
+from sd_wave_pair sdp
+--left outer join sd_wave w on(w.wave_id = sdp.wave_id)
+group by sdp.person_id --, w.wave_id
+order by sdp.person_id
+
+
+
+select * from sd_wave_pair where person_id = 16 or partner_id = 16
+
+
+select p1.person_id, p2.person_id
+from sd_wave_pair sdp1,
+	 sd_wave_pair sdp2,
+	 person p1,
+	 person p2
+where 	sdp1.person_id = p1.person_id
+and		sdp1.partner_id = p2.person_id
+and		sdp2.partner_id = p1.person_id
+and		sdp2.person_id = p2.person_id
+and		p1.person_id < p2.person_id
+
+select 	p1.*, sdp1.*,
+		p2.*, sdp2.*
+from sd_wave_pair sdp1,
+	 sd_wave_pair sdp2,
+	 person p1,
+	 person p2
+where 	sdp1.person_id = p1.person_id
+and		sdp1.partner_id = p2.person_id
+and		sdp2.partner_id = p1.person_id
+and		sdp2.person_id = p2.person_id
+and		p1.person_id < p2.person_id

@@ -1,0 +1,33 @@
+Folder PATH listing
+Volume serial number is 6088-9832
+C:.
+|   .gitignore
+|   NamingConventions.md
+|   ProjectFileStructure.doc
+|   README.md
+|   
++---Code
+|       README.md
+|       
++---Data
+|       README.md
+|       
++---Images
+|       ProjectFileStructure.png
+|       README.md
+|       
++---Presentation
+|       README.md
+|       
++---Resources
+|       Final_Project_Rubric.pdf
+|       GitHub_Supplementary.pdf
+|       README.md
+|       
+\---Static
+    |   README.md
+    |   
+    +---CSS
+    +---Images
+    +---Scripts
+    \---Templates

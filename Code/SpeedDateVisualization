@@ -1,0 +1,236 @@
+-- create a temporary table to host data set results
+DROP TABLE IF EXISTS SpeedDateVisualization;
+
+CREATE TEMP TABLE IF NOT EXISTS SpeedDateVisualization
+(
+	wave_id integer NOT NULL,
+	wave_date date NOT NULL,
+    person_id integer NOT NULL,
+    gender character(10) COLLATE pg_catalog."default",
+    age integer,
+	agebin character(10) COLLATE pg_catalog."default",
+    race character(100) COLLATE pg_catalog."default",
+    intendedcareer character(100) COLLATE pg_catalog."default",
+    importance_race integer,
+	importance_religion integer,
+    goal character(100) COLLATE pg_catalog."default",
+    freq_date character(100) COLLATE pg_catalog."default",
+    freq_go_out character(100) COLLATE pg_catalog."default",
+    interest_sports integer,
+    interest_tvsports integer,
+    interest_exercise integer,
+    interest_dining integer,
+    interest_museums integer,
+    interest_art integer,
+    interest_hiking integer,
+    interest_gaming integer,
+    interest_clubbing integer,
+    interest_reading integer,
+    interest_tv integer,
+    interest_theater integer,
+    interest_movies integer,
+    interest_concerts integer,
+    interest_music integer,
+    interest_shopping integer,
+    interest_yoga integer,
+    country character(100) COLLATE pg_catalog."default",
+	countrycode character(50) COLLATE pg_catalog."default",
+    stateid character(50) COLLATE pg_catalog."default",
+	city character(50) COLLATE pg_catalog."default",
+-- Partner
+	partner_id integer NOT NULL,
+    gender_o character(10) COLLATE pg_catalog."default",
+    age_o integer,
+	agebin_o character(10) COLLATE pg_catalog."default",
+    race_o character(100) COLLATE pg_catalog."default",
+    intendedcareer_o character(100) COLLATE pg_catalog."default",
+    importance_race_o integer,
+    importance_religion_o integer,
+    goal_o character(100) COLLATE pg_catalog."default",
+    freq_date_o character(100) COLLATE pg_catalog."default",
+    freq_go_out_o character(100) COLLATE pg_catalog."default",
+    interest_sports_o integer,
+    interest_tvsports_o integer,
+    interest_exercise_o integer,
+    interest_dining_o integer,
+    interest_museums_o integer,
+    interest_art_o integer,
+    interest_hiking_o integer,
+    interest_gaming_o integer,
+    interest_clubbing_o integer,
+    interest_reading_o integer,
+    interest_tv_o integer,
+    interest_theater_o integer,
+    interest_movies_o integer,
+    interest_concerts_o integer,
+    interest_music_o integer,
+    interest_shopping_o integer,
+    interest_yoga_o integer,
+    country_o character(100) COLLATE pg_catalog."default",
+	countrycode_o character(50) COLLATE pg_catalog."default",
+    stateid_o character(50) COLLATE pg_catalog."default",
+	city_o character(50) COLLATE pg_catalog."default",
+-- wave data
+    score_attractive integer,
+    score_sincere integer,
+    score_intelligent integer,
+    score_fun integer,
+    score_ambitious integer,
+    score_shared_interests integer,
+    blike integer,
+    probability integer,
+    decision integer,
+    bmatch integer
+);
+
+-- 1 .- insert all waves
+insert into SpeedDateVisualization(wave_id,
+								   wave_date,
+								   person_id,
+								   partner_id,
+								   score_attractive,
+								   score_sincere,
+								   score_intelligent,
+								   score_fun,
+								   score_ambitious,
+								   score_shared_interests,
+								   blike,
+								   probability,
+								   decision,
+								   bmatch)
+select	wp.wave_id,
+		w.wave_date,
+		wp.person_id,
+		wp.partner_id,
+		wp.score_attractive,
+		wp.score_sincere,
+		wp.score_intelligent,
+		wp.score_fun,
+		wp.score_ambitious,
+		wp.score_shared_interests,
+		wp.like,
+		wp.probability,
+		wp.decision,
+		wp.match
+from sd_wave_pair wp
+left outer join sd_wave w on(w.wave_id = wp.wave_id);
+
+-- Update person data
+update SpeedDateVisualization v
+	set age = p.age,
+		gender = 
+		case
+			when p.gender = 1 Then 'Male'
+			when p.gender = 0 then 'Female'
+		end,
+		agebin =
+		case
+			when p.age < 21 then '< 21'
+			when p.age >= 21 and p.age <=25 then '21 - 25'
+			when p.age > 25 and p.age <=30 then '26 - 30'
+			when p.age > 30 and p.age <=35 then '31 - 35'
+			when p.age > 35 and p.age <=40 then '36 - 40'
+			when p.age > 40 and p.age <=45 then '41 - 45'
+			when p.age > 45 and p.age <=50 then '46 - 50'
+			when p.age > 51 and p.age <=55 then '51 - 55'
+		end,		
+		race = trim(r.racedescription),
+		intendedcareer = trim(f.field_desc),
+		importance_race = p.importance_race,
+		importance_religion = p.importance_religion,
+		goal = trim(g.goaldescription),
+		freq_date = trim(f1.freqdescription),
+		freq_go_out = trim(f2.freqdescription),
+		interest_sports = p.interest_sports,
+		interest_tvsports = p.interest_tvsports,
+		interest_exercise = p.interest_exercise,
+		interest_dining = p.interest_dining,
+		interest_museums = p.interest_museums,
+		interest_art = p.interest_art,
+		interest_hiking = p.interest_hiking,
+		interest_gaming = p.interest_gaming,
+		interest_clubbing = p.interest_clubbing,
+		interest_reading = p.interest_reading,
+		interest_tv = p.interest_tv,
+		interest_theater = p.interest_theater,
+		interest_movies = p.interest_movies,
+		interest_concerts = p.interest_concerts,
+		interest_music = p.interest_music,
+		interest_shopping = p.interest_shopping,
+		interest_yoga = p.interest_yoga,
+		country = trim(p.country),
+		countrycode = trim(p.countrycode),
+		stateid = trim(p.state),
+		city = trim(p.city)
+from person p
+left outer join races r on(r.race_id = p.race)
+left outer join field f on(f.field_id = p.field_id)
+left outer join goals g on(g.goal_id = p.goal)
+left outer join frequencies f1 on(f1.freq_id = p.freq_date)
+left outer join frequencies f2 on(f2.freq_id = p.freq_go_out)
+where p.person_id = v.person_id;
+
+-- Update partner data
+update SpeedDateVisualization v
+	set age_o = p.age,
+		gender_o = 
+		case
+			when p.gender = 1 Then 'Male'
+			when p.gender = 0 then 'Female'
+		end,
+		agebin_o =
+		case
+			when p.age < 21 then '< 21'
+			when p.age >= 21 and p.age <=25 then '21 - 25'
+			when p.age > 25 and p.age <=30 then '26 - 30'
+			when p.age > 30 and p.age <=35 then '31 - 35'
+			when p.age > 35 and p.age <=40 then '36 - 40'
+			when p.age > 40 and p.age <=45 then '41 - 45'
+			when p.age > 45 and p.age <=50 then '46 - 50'
+			when p.age > 51 and p.age <=55 then '51 - 55'
+		end,		
+		race_o = trim(r.racedescription),
+		intendedcareer_o = trim(f.field_desc),
+		importance_race_o = p.importance_race,
+		importance_religion_o = p.importance_religion,
+		goal_o = trim(g.goaldescription),
+		freq_date_o = trim(f1.freqdescription),
+		freq_go_out_o = trim(f2.freqdescription),
+		interest_sports_o = p.interest_sports,
+		interest_tvsports_o = p.interest_tvsports,
+		interest_exercise_o = p.interest_exercise,
+		interest_dining_o = p.interest_dining,
+		interest_museums_o = p.interest_museums,
+		interest_art_o = p.interest_art,
+		interest_hiking_o = p.interest_hiking,
+		interest_gaming_o = p.interest_gaming,
+		interest_clubbing_o = p.interest_clubbing,
+		interest_reading_o = p.interest_reading,
+		interest_tv_o = p.interest_tv,
+		interest_theater_o = p.interest_theater,
+		interest_movies_o = p.interest_movies,
+		interest_concerts_o = p.interest_concerts,
+		interest_music_o = p.interest_music,
+		interest_shopping_o = p.interest_shopping,
+		interest_yoga_o = p.interest_yoga,
+		country_o = trim(p.country),
+		countrycode_o = trim(p.countrycode),
+		stateid_o = trim(p.state),
+		city_o = trim(p.city)
+from person p
+left outer join races r on(r.race_id = p.race)
+left outer join field f on(f.field_id = p.field_id)
+left outer join goals g on(g.goal_id = p.goal)
+left outer join frequencies f1 on(f1.freq_id = p.freq_date)
+left outer join frequencies f2 on(f2.freq_id = p.freq_go_out)
+where p.person_id = v.partner_id;
+
+-- Review data
+select * from SpeedDateVisualization order by wave_id, person_id, partner_id;
+
+
+-- select wave_id, wave_date, person_id, partner_id from SpeedDateVisualization;
+-- select * from SpeedDateVisualization;
+
+
+--select person_id,partner_id, count(person_id) as total from SpeedDateVisualization group by person_id,partner_id order by person_id, partner_id
