@@ -3,8 +3,6 @@ University of Miami, *Data Analytics Boot camp*, Final Project
 
 ![Data Analytics Boot camp](./Images/DashboardStoryPresentation.png)
 
-# GitHub Repository
-To access our __GitHub__ repository, [click here](https://github.com/DavidGGonzalez/TeamBlue_FinalProject)
 
 # Google Slides Presentation
 To access our __presentation__ on Google Slides, [click here](https://docs.google.com/presentation/d/1978Qe2eOFByf_HdCJHyek9K5IlwTDUz8wcMCVVryRdw/edit#slide=id.g1264ff9f090_2_75)
@@ -40,22 +38,6 @@ Fun topic and met requirements for machine learning project.
   * Can a machine learning model help in predicting and/or improving the speed dating process? 
   * Output is Match or No Match based on input data from speed dating experiement.
 
-# Team Roles
-
-#### Segment 1 
-- Gajardoni, Ana: Triangle Role: Created mockup Database including the ERD and explanation of how it is integrated into database. 
-- Thraher, Kristi: Square Role: Mockup of Machine Learning Model, including which model we choose and why along with the ReadMe file. 
-- Gonzalez, David: Square Role/Triangle: Set up of Repository and Branches, Read in data and created output labels.
-
-#### Segment 2
-- Gajardoni, Ana: Circle Role: Transform the mockup database into a full database that integrates with your work. 
-- Thraher, Kristi: Square Role: Refine the machine learning model you'll be using (train and test).  
-- Gonzalez, David: Circle/X Role: Continue with analysis and create visuals to acoompany the data story. Begin Outline of dashboard.
-
-#### Segment 3 
-- Gajardoni, Ana: Square Role: Complete peer reviews on the code. 
-- Thraher, Kristi: Triangle Role: Create a presentation to share with your class.
-- Gonzalez, David: Circle Role: Create a dashboard to display your findings.
 
 ### Technologies:
 * Application development:  
